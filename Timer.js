@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, Text, Button, Vibration } from 'react-native';
+import { View, Text, Vibration } from 'react-native';
 import PropTypes from 'prop-types';
 
 import TimerDisplay from './TimerDisplay';
+import Buttons from './Buttons';
 
 const DURATION = 10000;
-const breakLength = 5;
-const workLength = 10;
+const breakLength = 5; // in minutes
+const workLength = 10; // in minutes
 
 class Timer extends React.Component {
   state = {
     stopped: false,
-    breakLength,
-    workLength,
-    timer: workLength,
+    breakLength: breakLength * 60000, // in ms
+    workLength: workLength * 60000, // in ms
+    timer: workLength * 60000,
     isBreak: false
   }
 
@@ -52,8 +53,8 @@ class Timer extends React.Component {
         isBreak: !prevState.isBreak 
       }));
     } else {
-      if (timer === 1) Vibration.vibrate(DURATION);
-      this.setState((prevState) => ({ timer: prevState.timer - 1 }));
+      if (timer === 1000) Vibration.vibrate(DURATION);
+      this.setState((prevState) => ({ timer: prevState.timer - 1000 }));
     }
   }
 
@@ -70,8 +71,7 @@ class Timer extends React.Component {
     const { stopped, timer, isBreak } = this.state;
     return (
       <React.Fragment>
-        <Button title={stopped ? 'Start' : 'Stop'} onPress={this.onPressButton} />
-        <Button title="Reset" onPress={this.onPressReset} />
+        <Buttons onPressButton={this.onPressButton} onPressReset={this.onPressReset} stopped={stopped} />
         <TimerDisplay timer={timer} isBreak={isBreak} />
       </React.Fragment>
     );
