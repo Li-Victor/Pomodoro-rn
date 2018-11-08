@@ -8,45 +8,50 @@ class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    const { sessionLength, breakLength } = this.props;
+    const { workLength } = this.props;
     
     this.state = {
-      sessionLength, 
-      breakLength
+      timer: workLength,
+      isBreak: false
     };
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => {
+    this.timerIntervalID = setInterval(() => {
       this.decrementClock();
     }, 1000);
   }
 
   componentWillUnMount() {
-    clearInterval(this.timer);
+    clearInterval(this.timerIntervalID);
   }
 
   decrementClock = () => {
-    if (this.state.sessionLength === 0) {
-      Vibration.vibrate(DURATION);
-      this.setState({ sessionLength: 5 });
+    const { workLength, breakLength } = this.props;
+    const { timer } = this.state;
+    if (timer === 0) {
+      this.setState((prevState) => ({ 
+        timer: prevState.isBreak ? workLength : breakLength,
+        isBreak: !prevState.isBreak 
+      }));
     } else {
-      this.setState((prevState) => ({ sessionLength: prevState.sessionLength - 1 }));
+      if (timer === 1) Vibration.vibrate(DURATION);
+      this.setState((prevState) => ({ timer: prevState.timer - 1 }));
     }
   }
 
   render() {
-    const { sessionLength, breakLength } = this.state;
+    const { timer, isBreak } = this.state;
     return (
       <View>
-        <Text>Session: {sessionLength}</Text>
+        { isBreak ? (<Text>Break: {timer}</Text>) : (<Text>Work: {timer}</Text>) }
       </View>
     );
   }
 }
 
 Timer.propTypes = {
-  sessionLength: PropTypes.number.isRequired,
+  workLength: PropTypes.number.isRequired,
   breakLength: PropTypes.number.isRequired
 };
 
