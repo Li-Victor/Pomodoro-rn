@@ -5,13 +5,15 @@ import PropTypes from 'prop-types';
 import TimerDisplay from './TimerDisplay';
 
 const DURATION = 10000;
+const breakLength = 5;
+const workLength = 10;
 
 class Timer extends React.Component {
   state = {
-    stop: false,
-    breakLength: 5,
-    workLength: 10,
-    timer: 10,
+    stopped: false,
+    breakLength,
+    workLength,
+    timer: workLength,
     isBreak: false
   }
 
@@ -33,13 +35,13 @@ class Timer extends React.Component {
     clearInterval(this.timerIntervalID);
   }
 
-  onPress = () => {
-    if (this.state.stop) {
+  onPressButton = () => {
+    if (this.state.stopped) {
       this.startTimer();
     } else {
       this.stopTimer();
     }
-    this.setState((prevState) => ({ stop: !prevState.stop }));
+    this.setState((prevState) => ({ stopped: !prevState.stopped }));
   }
 
   decrementClock = () => {
@@ -55,11 +57,21 @@ class Timer extends React.Component {
     }
   }
 
+  onPressReset = () => {
+    const { workLength } = this.state;
+    // stop timer and then start timer
+    this.stopTimer();
+    this.setState(() => ({ stopped: false, timer: workLength, isBreak: false }), () => {
+      this.startTimer();
+    })
+  }
+
   render() {
-    const { stop, timer, isBreak } = this.state;
+    const { stopped, timer, isBreak } = this.state;
     return (
       <React.Fragment>
-        <Button title={stop ? 'Start' : 'Stop'} onPress={this.onPress} />
+        <Button title={stopped ? 'Start' : 'Stop'} onPress={this.onPressButton} />
+        <Button title="Reset" onPress={this.onPressReset} />
         <TimerDisplay timer={timer} isBreak={isBreak} />
       </React.Fragment>
     );
