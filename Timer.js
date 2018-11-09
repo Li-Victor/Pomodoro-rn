@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TimerDisplay from './TimerDisplay';
 import Buttons from './Buttons';
 
-const DURATION = 10000;
+const DURATION = 500;
 const breakLength = 5; // in minutes
 const workLength = 10; // in minutes
 
@@ -53,7 +53,7 @@ class Timer extends React.Component {
         isBreak: !prevState.isBreak 
       }));
     } else {
-      if (timer === 1000) Vibration.vibrate(DURATION);
+      if (timer === 1000) Vibration.vibrate([DURATION, DURATION, DURATION]);
       this.setState((prevState) => ({ timer: prevState.timer - 1000 }));
     }
   }

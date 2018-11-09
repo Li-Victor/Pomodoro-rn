@@ -1,6 +1,13 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+
+const styles = StyleSheet.create({
+  text: {
+    fontWeight: 'bold',
+    fontSize: 40
+  }
+});
 
 // displays in minute:second
 function display(timer) {
@@ -12,7 +19,7 @@ function display(timer) {
 }
 const TimerDisplay = ({ timer, isBreak }) => (
   <React.Fragment>
-    { isBreak ? (<Text>Break: {display(timer)}</Text>) : (<Text>Work: {display(timer)}</Text>) }
+    { isBreak ? (<Text style={styles.text}>Break: {display(timer)}</Text>) : (<Text style={styles.text}>Work: {display(timer)}</Text>) }
   </React.Fragment>
 );
   
